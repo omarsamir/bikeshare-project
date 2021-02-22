@@ -7,8 +7,8 @@ CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
 cities = ['chicago','new york city','washington']
-months = ['Jan','Feb','Mar','Apr','May','June']
-days = ['sat','sun','mon','tues','wed','thurs']
+months = ['Jan','Feb','Mar','Apr','May','June','July','Aug','Sep','Oct','Nov','Dec']
+days = ['Sat','Sun','Mon','Tues','Wed','Thurs']
 city, month, day = '','',''
 def get_filters():
 
@@ -65,7 +65,7 @@ def load_data(city, month, day):
     # filter by month if applicable
     if month != 'all':
         month =  months.index(month) + 1
-        df = df[ df['month'] == month ]
+        df = df[ df['month'] == month]
 
     # filter by day of week if applicable
     if day != 'all':
@@ -83,14 +83,20 @@ def time_stats(df):
     print('\nCalculating The Most Frequent Times of Travel...\n')
     start_time = time.time()
 
+    df['month'] = df['Start Time'].dt.month
+    df['day_of_week'] = df['Start Time'].dt.day_name()
+    df['hour'] = df['Start Time'].dt.hour
     # display the most common month
-
+    most_common_month = df['month'].value_counts().idxmax()
+    print("The most common month is: " + months[most_common_month - 1])
 
     # display the most common day of week
-
+    most_common_day_of_week = df['day_of_week'].value_counts().idxmax()
+    print("The most common day is: " + most_common_day_of_week)
 
     # display the most common start hour
-
+    most_common_start_hour = df['hour'].value_counts().idxmax()
+    print("The most common day is: " + str(most_common_start_hour))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
