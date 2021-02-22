@@ -1,13 +1,14 @@
 import time
 import pandas as pd
 import numpy as np
+from pathlib import Path
 
 CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
-cities = {'chicago','new york city','washington'}
-months = {'Jan','Feb','Mar','Apr','May','June'}
-days = {'sat','sun','mon','tues','wed','thurs'}
+cities = ['chicago','new york city','washington']
+months = ['Jan','Feb','Mar','Apr','May','June']
+days = ['sat','sun','mon','tues','wed','thurs']
 city, month, day = '','',''
 def get_filters():
 
@@ -25,6 +26,7 @@ def get_filters():
        city = input('Enter the name of the city to analyze (chicago, washington and new york city) \n')
        if city in cities:
            break
+    print(CITY_DATA[city])
     # get user input for month (all, january, february, ... , june)
     while True:
         month = input('Enter the name of the month to filter by (Jan, Feb, Mar, Apr, May or June), or "all" to apply no month filter \n')
@@ -50,7 +52,26 @@ def load_data(city, month, day):
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
     Returns:
         df - Pandas DataFrame containing city data filtered by month and day
-    """
+    """  
+    # load needed city data
+    script_location = Path(__file__).absolute().parent
+    file_location = script_location / CITY_DATA[city]
+    df = pd.read_csv(file_location)
+    df['Start Time'] = pd.to_datetime(df['Start Time'])
+    df['month'] = df['Start Time'].dt.month
+    df['day_of_week'] = df['Start Time'].dt.day_name()
+    df['hour'] = df['Start Time'].dt.hour
+
+    # filter by month if applicable
+    if month != 'all':
+        month =  months.index(month) + 1
+        df = df[ df['month'] == month ]
+
+    # filter by day of week if applicable
+    if day != 'all':
+        # filter by day of week to create the new dataframe
+        df = df[ df['day_of_week'] == day.title()]
+
 
 
     return df
