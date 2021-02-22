@@ -89,21 +89,21 @@ def time_stats(df):
     # display the most common month
   
     if len(df['month'].value_counts()) > 0:
-        most_common_month = df['month'].value_counts().idxmax()
+        most_common_month = df['month'].mode().loc[0]
         print("The most common month is: " + months[most_common_month - 1])
     else:
         print("No data for the most common month")
 
     # display the most common day of week
     if len(df['day_of_week'].value_counts()) > 0:
-        most_common_day_of_week = df['day_of_week'].value_counts().idxmax()
+        most_common_day_of_week = df['day_of_week'].mode().loc[0]
         print("The most common day is: " + most_common_day_of_week)
     else:
          print("No data for the most common day")
 
     # display the most common start hour
     if len(df['hour'].value_counts()) > 0:
-        most_common_start_hour = df['hour'].value_counts().idxmax()
+        most_common_start_hour = df['hour'].mode().loc[0]
         print("The most common day is: " + str(most_common_start_hour))
     else:
          print("No data for the most common hour")
@@ -119,19 +119,26 @@ def station_stats(df):
 
     # display most commonly used start station
     if  len(df['Start Station'].value_counts()) > 0:
-        most_commonly_used_start_station = df['Start Station'].value_counts().idxmax()
+        most_commonly_used_start_station = df['Start Station'].mode().loc[0]
         print("The most commonly used start station: " + most_commonly_used_start_station)
     else:
         print("No data for the most commonly used start station")
 
     # display most commonly used end station
     if len(df['End Station'].value_counts()) > 0:
-        most_commonly_used_end_station = df['End Station'].value_counts().idxmax()
+        most_commonly_used_end_station = df['End Station'].mode().loc[0]
         print("The most commonly used end station: " + most_commonly_used_end_station)
     else:
         print("No data for the most commonly used end station")
-    # display most frequent combination of start station and end station trip
 
+
+    # display most frequent combination of start station and end station trip
+    if len(df[['Start Station','End Station']].value_counts()) > 0:
+        most_commonly_used_start_and_end_station = df[['Start Station', 'End Station']].mode().loc[0]
+        print("\nResult of the most frequent combination of start station and end station trip: ")
+        print(most_commonly_used_start_and_end_station)
+    else:
+        print("No data for the most commonly used end station")
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
