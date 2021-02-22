@@ -7,8 +7,8 @@ CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
 cities = ['chicago','new york city','washington']
-months = ['Jan','Feb','Mar','Apr','May','June','July','Aug','Sep','Oct','Nov','Dec']
-days = ['Sat','Sun','Mon','Tues','Wed','Thurs']
+months = ['jan','feb','mar','apr','may','june','july','aug','sep','oct','nov','dec']
+days = ['sat','sun','mon','tues','wed','thurs']
 city, month, day = '','',''
 def get_filters():
 
@@ -29,7 +29,7 @@ def get_filters():
     print(CITY_DATA[city])
     # get user input for month (all, january, february, ... , june)
     while True:
-        month = input('Enter the name of the month to filter by (Jan, Feb, Mar, Apr, May or June), or "all" to apply no month filter \n')
+        month = input('Enter the name of the month to filter by (jan, feb, mar, apr, may or june), or "all" to apply no month filter \n')
         if month in months or month == 'all':
             break
     # get user input for day of week (all, monday, tuesday, ... sunday)
@@ -59,20 +59,15 @@ def load_data(city, month, day):
     df = pd.read_csv(file_location)
     df['Start Time'] = pd.to_datetime(df['Start Time'])
     df['month'] = df['Start Time'].dt.month
-    df['day_of_week'] = df['Start Time'].dt.day_name()
+    df['day_name'] = df['Start Time'].dt.day_name()
     df['hour'] = df['Start Time'].dt.hour
 
-    # filter by month if applicable
     if month != 'all':
         month =  months.index(month) + 1
         df = df[ df['month'] == month]
 
-    # filter by day of week if applicable
     if day != 'all':
-        # filter by day of week to create the new dataframe
-        df = df[ df['day_of_week'] == day.title()]
-
-
+        df = df[ df['day_name'] == day.title()]
 
     return df
 
@@ -84,7 +79,7 @@ def time_stats(df):
     start_time = time.time()
 
     df['month'] = df['Start Time'].dt.month
-    df['day_of_week'] = df['Start Time'].dt.day_name()
+    df['day_name'] = df['Start Time'].dt.day_name()
     df['hour'] = df['Start Time'].dt.hour
     # display the most common month
   
@@ -95,9 +90,9 @@ def time_stats(df):
         print("No data for the most common month")
 
     # display the most common day of week
-    if len(df['day_of_week'].value_counts()) > 0:
-        most_common_day_of_week = df['day_of_week'].mode().loc[0]
-        print("The most common day is: " + most_common_day_of_week)
+    if len(df['day_name'].value_counts()) > 0:
+        most_common_day_name = df['day_name'].mode().loc[0]
+        print("The most common day is: " + most_common_day_name)
     else:
          print("No data for the most common day")
 
@@ -172,23 +167,29 @@ def user_stats(df):
     print("Counts of user types: ", str(len(df['User Type'].dropna().unique())))
 
     # Display counts of gender
-    print("Counts of gender: ", str(len(df['Gender'].dropna().unique())))
+    if 'Gender' in df.columns and len(df['Gender'].value_counts()) > 0:
+        print("Counts of gender: ", str(len(df['Gender'].dropna().unique())))
+    else:
+        print('No data for gender to display')
 
     # Display earliest, most recent, and most common year of birth
     
-    # Earliest
-    print("The most earliest birth year: ", str(int(df['Birth Year'].min())))
+    if 'Birth Year' in df.columns and len(df['Birth Year'].value_counts()) > 0:
 
-    # most recent
-   
-    print("The most recent birth year: ", str(int(df['Birth Year'].max())))
+        # Earliest
+        print("The most earliest birth year: ", str(int(df['Birth Year'].min())))
 
-    # most common
-    if len(df['Birth Year'].value_counts()) > 0:
-        most_recent_year_of_birthday = df['Birth Year'].mode().loc[0]
-        print("The most common birth year: ", str(int(most_recent_year_of_birthday)))
+        # most recent
+        print("The most recent birth year: ", str(int(df['Birth Year'].max())))
+
+        # most common
+        if len(df['Birth Year'].value_counts()) > 0:
+            most_recent_year_of_birthday = df['Birth Year'].mode().loc[0]
+            print("The most common birth year: ", str(int(most_recent_year_of_birthday)))
+        else:
+            print("No data for the most common birth year")
     else:
-        print("No data for the most common birth year")
+         print("No data for birth year to display")
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
