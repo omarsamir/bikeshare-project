@@ -87,17 +87,26 @@ def time_stats(df):
     df['day_of_week'] = df['Start Time'].dt.day_name()
     df['hour'] = df['Start Time'].dt.hour
     # display the most common month
-    most_common_month = df['month'].value_counts().idxmax()
-    print("The most common month is: " + months[most_common_month - 1])
+  
+    if len(df['month'].value_counts()) > 0:
+        most_common_month = df['month'].value_counts().idxmax()
+        print("The most common month is: " + months[most_common_month - 1])
+    else:
+        print("No data for the most common month")
 
     # display the most common day of week
-    most_common_day_of_week = df['day_of_week'].value_counts().idxmax()
-    print("The most common day is: " + most_common_day_of_week)
+    if len(df['day_of_week'].value_counts()) > 0:
+        most_common_day_of_week = df['day_of_week'].value_counts().idxmax()
+        print("The most common day is: " + most_common_day_of_week)
+    else:
+         print("No data for the most common day")
 
     # display the most common start hour
-    most_common_start_hour = df['hour'].value_counts().idxmax()
-    print("The most common day is: " + str(most_common_start_hour))
-
+    if len(df['hour'].value_counts()) > 0:
+        most_common_start_hour = df['hour'].value_counts().idxmax()
+        print("The most common day is: " + str(most_common_start_hour))
+    else:
+         print("No data for the most common hour")
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
@@ -109,11 +118,18 @@ def station_stats(df):
     start_time = time.time()
 
     # display most commonly used start station
-
+    if  len(df['Start Station'].value_counts()) > 0:
+        most_commonly_used_start_station = df['Start Station'].value_counts().idxmax()
+        print("The most commonly used start station: " + most_commonly_used_start_station)
+    else:
+        print("No data for the most commonly used start station")
 
     # display most commonly used end station
-
-
+    if len(df['End Station'].value_counts()) > 0:
+        most_commonly_used_end_station = df['End Station'].value_counts().idxmax()
+        print("The most commonly used end station: " + most_commonly_used_end_station)
+    else:
+        print("No data for the most commonly used end station")
     # display most frequent combination of start station and end station trip
 
 
