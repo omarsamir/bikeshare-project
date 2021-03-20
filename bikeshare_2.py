@@ -127,13 +127,13 @@ def station_stats(df):
         print("No data for the most commonly used end station")
 
 
-    # display most frequent combination of start station and end station trip
-    if len(df[['Start Station','End Station']].value_counts()) > 0:
+    # display most frequent combination of start station and end station trip    
+    if df.groupby(['Start Station','End Station']).size().empty == False:
         most_commonly_used_start_and_end_station = df[['Start Station', 'End Station']].mode().loc[0]
         print("\nResult of the most frequent combination of start station and end station trip: ")
         print(most_commonly_used_start_and_end_station)
     else:
-        print("No data for the most commonly used end station")
+        print("No data for most frequent combination of start station and end station trip")
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
